@@ -1,82 +1,50 @@
-import { useState, useEffect } from 'react';
-import { Container, Grid } from '@mui/material';
-import { toast } from 'react-toastify';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import MovieCard from '../components/MovieCard';
-import Pagination from '../components/Pagination';
-import api from '../utils/api';
+import { useEffect, useState } from 'react';
+import api from '../utils/api';  // Подключаем ваш API
 
-export default function Home() {
+const HomePage = () => {
   const [movies, setMovies] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(true);  // Состояние для индикатора загрузки
+  const [error, setError] = useState(null);  // Состояние для ошибки
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchMovies = async () => {
       try {
-        const { data } = await api.get('/movies/', {
-          params: { page },
-        });
-        setMovies(data.results);
-        setTotalPages(data.total_pages);
+        const response = await api.get('/movies/');
+        setMovies(response.data.movies);  // Убедитесь, что в response.data есть movies
+        setLoading(false);  // Завершаем загрузку
       } catch (error) {
-        console.error('Error fetching movies:', error);
-        toast.error('Failed to load movies');
+        setError(error.message);  // Сохраняем ошибку
+        setLoading(false);  // Завершаем загрузку даже в случае ошибки
       }
     };
 
-    const fetchFavorites = async () => {
-      try {
-        const { data } = await api.get('/favorites/');
-        setFavorites(data.map(movie => movie.movie_id));
-      } catch (err) {
-        console.error(err);
-        toast.error('Failed to load favorites');
-      }
-    };
+    fetchMovies();
+  }, []);
 
-    fetchData();
-    fetchFavorites();
-  }, [page]);
+  // Если идет загрузка, показываем индикатор
+  if (loading) {
+    return <div>Загрузка...</div>;
+  }
 
-  const handleFavoriteChange = async () => {
-    try {
-      const { data } = await api.get('/favorites/');
-      setFavorites(data.map(movie => movie.movie_id));
-    } catch (err) {
-      console.error(err);
-      toast.error('Failed to update favorites');
-    }
-  };
-
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-  };
+  // Если произошла ошибка, показываем сообщение об ошибке
+  if (error) {
+    return <div>Ошибка при загрузке фильмов: {error}</div>;
+  }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Header />
-      <Container maxWidth="lg" sx={{ py: 4, flex: 1 }}>
-        <Grid container spacing={3}>
-          {movies.map((movie) => (
-            <Grid item key={movie.movie_id} xs={12} sm={6} md={4} lg={3}>
-              <MovieCard
-                movie={movie}
-                isFavorite={favorites.includes(movie.movie_id)}
-                onFavoriteChange={handleFavoriteChange}
-              />
-            </Grid>
-          ))}
-        </Grid>
-        <Pagination
-          count={totalPages}
-          page={page}
-          onChange={handlePageChange}
-        />
-      </Container>
-      <Footer />
+    <div>
+      <h1>Список фильмов</h1>
+      <ul>
+        {movies.length > 0 ? (
+          movies.map(movie => (
+            <li key={movie.id}>{movie.title}</li>
+          ))
+        ) : (
+          <li>Нет доступных фильмов.</li>
+        )}
+      </ul>
     </div>
   );
-}
+};
+
+export default HomePage;

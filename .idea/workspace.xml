@@ -5,28 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="21da8490-3e6e-450b-91e6-a4c04577ee60" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/films.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/components/AuthModal.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/components/Footer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/components/Header.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/components/MovieCard.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/components/Pagination.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/contexts/AuthContext.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/pages/_app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/pages/_document.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/pages/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/pages/login.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/pages/profile.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/pages/register.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/styles/Home.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/styles/globals.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/utils/api.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/movie_project/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/contexts/AuthContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/contexts/AuthContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pages/_app.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/_app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pages/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pages/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/utils/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/utils/api.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +25,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/movie_project/backend" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,

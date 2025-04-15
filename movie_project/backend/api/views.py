@@ -1,26 +1,26 @@
-import requests
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework import generics
 from rest_framework.views import APIView
-from django.contrib.auth import authenticate, login
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
 from .models import Movie, User
-from .serializers import MovieSerializer, UserSerializer, UserRegisterSerializer
+from .serializers import MovieSerializer, UserRegisterSerializer, UserSerializer
 
+# Вьюха для вывода списка фильмов
+class MovieListView(generics.ListAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
 
-KP_API_KEY = '02CDVJX-YTN447S-G2JFKDJ-YZHHMYT'
-KP_API_URL = 'https://kinopoiskapiunofficial.tech/api/v2.2/films/top'
-
-
+# Вьюха для получения фильмов с сортировкой по рейтингу
 class MovieList(APIView):
     def get(self, request):
         movies = Movie.objects.all().order_by('-vote_average')
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
 
-
+# Вьюха для регистрации пользователей
 class UserRegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegisterSerializer
@@ -35,21 +35,22 @@ class UserRegisterView(generics.CreateAPIView):
             'token': token.key
         }, status=status.HTTP_201_CREATED)
 
+# Вьюха для авторизации пользователей
+class UserLoginView(APIView):
+    permission_classes = [AllowAny]
 
-class UserLoginView(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data,
-                                         context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({
-            'token': token.key,
-            'user_id': user.pk,
-            'email': user.email
-        })
+    def post(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            })
+        return Response(serializer.errors, status=400)
 
-
+# Вьюха для получения профиля текущего пользователя
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -57,7 +58,7 @@ class UserProfileView(APIView):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
-
+# Вьюха для работы с избранными фильмами
 class FavoriteView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -67,7 +68,7 @@ class FavoriteView(APIView):
             request.user.favorites.add(movie)
             return Response({'status': 'added to favorites'})
         except Movie.DoesNotExist:
-            return Response({'error': 'Movie not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Movie not found'}, status=404)
 
     def delete(self, request, movie_id):
         try:
@@ -75,7 +76,7 @@ class FavoriteView(APIView):
             request.user.favorites.remove(movie)
             return Response({'status': 'removed from favorites'})
         except Movie.DoesNotExist:
-            return Response({'error': 'Movie not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Movie not found'}, status=404)
 
     def get(self, request):
         favorites = request.user.favorites.all()

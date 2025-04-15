@@ -1,65 +1,35 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import api from '../utils/api';
-import { useRouter } from 'next/router';
+import React, { createContext, useState, useContext } from 'react';
+import api from '../utils/api'; // Это ваш экземпляр axios с настройками
 
 const AuthContext = createContext();
 
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-    const loadUser = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const { data } = await api.get('/profile/');
-          setUser(data);
-        } catch (err) {
-          localStorage.removeItem('token');
-        }
-      }
-      setLoading(false);
-    };
-    loadUser();
-  }, []);
-
-  const register = async (username, email, password) => {
-    try {
-      const { data } = await api.post('/register/', { username, email, password });
-      localStorage.setItem('token', data.token);
-      const userRes = await api.get('/profile/');
-      setUser(userRes.data);
-      return { success: true };
-    } catch (err) {
-      return { success: false, error: err.response?.data };
-    }
-  };
-
+  // Функция для логина
   const login = async (username, password) => {
     try {
-      const { data } = await api.post('/login/', { username, password });
-      localStorage.setItem('token', data.token);
-      const userRes = await api.get('/profile/');
-      setUser(userRes.data);
-      return { success: true };
-    } catch (err) {
-      return { success: false, error: err.response?.data };
+      const response = await api.post('/login/', { username, password });
+      localStorage.setItem('token', response.data.token); // Сохраняем токен в localStorage
+      setIsAuthenticated(true); // Обновляем состояние
+    } catch (error) {
+      console.error('Ошибка при входе:', error);
     }
   };
 
+  // Функция для выхода
   const logout = () => {
     localStorage.removeItem('token');
-    setUser(null);
-    router.push('/');
+    setIsAuthenticated(false);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, register, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);
