@@ -1,20 +1,10 @@
-import { serverApi } from '@/lib/server-api';
-import { MovieList } from '@/components/movies/MovieList';
+import HomeClient from '@/components/movies/HomeClient';
 
-export default async function Home() {
-  let movies;
-
-  try {
-    movies = await serverApi.getMovies();
-  } catch (error) {
-    console.error('Failed to load movies:', error);
-    movies = [];
-  }
-
+export default function Home() {
   return (
     <main className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Popular Movies</h1>
-      <MovieList movies={movies} />
+      <HomeClient />
     </main>
   );
 }

@@ -2,8 +2,9 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
 export const serverApi = {
-  getMovies: async () => {
-    const res = await fetch(`${API_BASE}/movies/`);
-    return await res.json();
-  }
+  async getMovies(page = 1) {
+    const res = await fetch(`http://127.0.0.1:8000/api/movies/?page=${page}`);
+    if (!res.ok) throw new Error('Ошибка загрузки фильмов');
+    return res.json();
+  },
 };
